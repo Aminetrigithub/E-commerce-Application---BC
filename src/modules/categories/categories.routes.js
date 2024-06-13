@@ -1,7 +1,6 @@
 import express from 'express'
 import * as categoryController from './categories.controller.js'
 
-
 const categoryRouter = express.Router()
 
 // categoryRouter.get('/',categoryController.getAllCategory)

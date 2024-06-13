@@ -1,19 +1,33 @@
 import express from "express";
 import dotenv from "dotenv";
-import {dbConnection }from "./databases/dbConnection.js";
+import { dbConnection } from "./databases/dbConnection.js";
 import categoryRouter from "./src/modules/categories/categories.routes.js";
 import morgan from "morgan";
+import AppError from "./src/utils/services/AppError.js";
+import globalError from "./src/utils/middleware/globalErrorHandle.js";
 
 dotenv.config();
 const app = express();
 const port = 3000;
 
 app.use(express.json());
-app.use(morgan('tiny'))
-app.use('/api/v1/category',categoryRouter)
-app.all("*", (req, res) =>
-  res.json({ message: `can't find this route : ${req.originalUrl ,"****",req.url}` })
+app.use(morgan("tiny"));
+
+app.use("/api/v1/category", categoryRouter);
+
+app.all(
+  "*",
+  (req, res, next) =>
+    next(new AppError(`can't find this route : ${req.originalUrl}`, 404))
+  //  res.json({ message: `can't find this route : ${req.originalUrl}` })}
 );
+
+app.use(globalError);
 
 dbConnection();
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+
+
+process.on("unhandledRejection", (err) => {
+  console.log(err.name, err.message);
+})
