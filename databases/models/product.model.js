@@ -52,7 +52,9 @@ const productSchema = mongoose.Schema(
       min: 0,
     },
     imgCover: String,
+    
     images: [String],
+    
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "category",
@@ -74,6 +76,6 @@ const productSchema = mongoose.Schema(
   }
 );
 
-const productModel = model("product", productSchema);
+const productModel = mongoose.model("product", productSchema);
 
 export default productModel;

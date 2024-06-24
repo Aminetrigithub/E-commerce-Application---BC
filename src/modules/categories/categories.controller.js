@@ -2,6 +2,7 @@ import { categoryModel } from "../../../databases/models/category.model.js";
 import slugify from "slugify";
 import AppError from "../../utils/services/AppError.js";
 import catchAsyncError from "../../utils/middleware/catchAsyncError.js";
+import deleteOne from "../../utils/handlers/refactor.handler.js";
 
 
 
@@ -41,13 +42,7 @@ const updateCategory = catchAsyncError(async (req, res, next) => {
   // res.json({message:"Done", results})
 });
 
-const deleteCategory = catchAsyncError(async (req, res, next) => {
-  let { id } = req.params;
-  let results = await categoryModel.findByIdAndDelete(id);
-  //res.json({ message: "this category is deleted: ", results });
-  !results && next(new AppError("Category not found", 404));
-  results && res.json({ message: "this category is deleted: ", results });
-});
+const deleteCategory = deleteOne(categoryModel);
 
 export {
   getAllCategory,

@@ -2,6 +2,7 @@ import slugify from "slugify";
 import AppError from "../../utils/services/AppError.js";
 import catchAsyncError from "../../utils/middleware/catchAsyncError.js";
 import { subCategoryModel } from "../../../databases/models/subcategory.model.js";
+import deleteOne from "../../utils/handlers/refactor.handler.js";
 
 const createSubCategory = catchAsyncError(async (req, res, next) => {
   let { name, categoryId } = req.body;
@@ -15,21 +16,22 @@ const createSubCategory = catchAsyncError(async (req, res, next) => {
 });
 
 const getAllSubCategory = catchAsyncError(async (req, res, next) => {
-  console.log("salam", req.params)
-  let filters = {}
+  console.log("salam", req.params);
+  let filters = {};
   if (req.params && req.params.id) {
     filters = { category: req.params.id };
   }
-  let results = await subCategoryModel.find( filters );
-  res.json({ message: "the all categories are: ", results });
+  let results = await subCategoryModel.find(filters);
+  res.json({ message: "the all subcategories are: ", results });
 });
 
 const getSubCategoryById = catchAsyncError(async (req, res, next) => {
   let { id } = req.params;
   let results = await subCategoryModel.findById(id);
-  !results && next(new AppError("Category not found", 404));
+  // .populate('category', 'name -slug -image');
+  !results && next(new AppError("subcategory not found", 404));
   results &&
-    res.json({ message: "the category that you look for is:", results });
+    res.json({ message: "the subcategory that you look for is:", results });
 });
 
 const updateSubCategory = catchAsyncError(async (req, res, next) => {
@@ -48,13 +50,7 @@ const updateSubCategory = catchAsyncError(async (req, res, next) => {
   // res.json({message:"Done", results})
 });
 
-const deleteSubCategory = catchAsyncError(async (req, res, next) => {
-  let { id } = req.params;
-  let results = await subCategoryModel.findByIdAndDelete(id);
-  //res.json({ message: "this category is deleted: ", results });
-  !results && next(new AppError("subcategory not found", 404));
-  results && res.json({ message: "this subcategory is deleted: ", results });
-});
+const deleteSubCategory = deleteOne(subCategoryModel);
 
 export {
   getAllSubCategory,
