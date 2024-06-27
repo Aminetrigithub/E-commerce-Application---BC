@@ -8,7 +8,7 @@ import globalError from "./src/utils/middleware/globalErrorHandle.js";
 
 import subCategoryRouter from "./src/modules/subCategories/subCategories.routes.js";
 import brandRouter from "./src/modules/brands/brands.routes.js";
-import productRouter from "./src/modules/product/product.routes.js";
+import productRouter from "./src/modules/products/product.routes.js";
 
 
 dotenv.config();

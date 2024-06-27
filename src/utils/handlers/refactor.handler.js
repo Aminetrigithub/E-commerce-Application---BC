@@ -6,9 +6,9 @@ const deleteOne = (model) => {
 return  catchAsyncError(async (req, res, next) => {
     let { id } = req.params;
     let results = await model.findByIdAndDelete(id);
-    !results && next(new AppError("Category not found", 404));
-    results && res.json({ message: "this category is deleted: ", results });
+    !results && next(new AppError("Not found to delete", 404));
+    results && res.json({ message: "Deleted with success: ", results });
   })
  }
-
- export default deleteOne
+export default deleteOne
+ 
