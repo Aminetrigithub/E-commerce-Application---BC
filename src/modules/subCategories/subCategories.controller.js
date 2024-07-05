@@ -3,6 +3,7 @@ import AppError from "../../utils/services/AppError.js";
 import catchAsyncError from "../../utils/middleware/catchAsyncError.js";
 import { subCategoryModel } from "../../../databases/models/subcategory.model.js";
 import deleteOne from "../../utils/handlers/refactor.handler.js";
+import ApiFeatures from "../../utils/APIFeatures.js";
 
 const createSubCategory = catchAsyncError(async (req, res, next) => {
   let { name, categoryId } = req.body;
@@ -17,11 +18,13 @@ const createSubCategory = catchAsyncError(async (req, res, next) => {
 
 const getAllSubCategory = catchAsyncError(async (req, res, next) => {
   console.log("salam", req.params);
+  let apiFeature = new ApiFeatures(subCategoryModel.find(), req.query).pagination().sort().fields() 
+let results = await apiFeature.mongooseQuery;
+
   let filters = {};
   if (req.params && req.params.id) {
     filters = { category: req.params.id };
   }
-  let results = await subCategoryModel.find(filters);
   res.json({ message: "the all subcategories are: ", results });
 });
 

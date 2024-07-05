@@ -15,9 +15,8 @@ const createProduct = catchAsyncError(async (req, res, next) => {
 // skip ... limit
 
 const getAllProduct = catchAsyncError(async (req, res, next) => {
-let apiFeature = new ApiFeatures(productModel.find(), req.query).pagination()
-//  execute the query  
-let results = await apiFeature.mongooseQuery;
+let apiFeature = new ApiFeatures(productModel.find(), req.query).pagination().sort().fields()
+let results = await apiFeature.mongooseQuery;/* 3lech .mongooseQuery -->.find()--> execute query */
   res.json({ message: "The all products are: ", page: apiFeature.page, results });
 });
 

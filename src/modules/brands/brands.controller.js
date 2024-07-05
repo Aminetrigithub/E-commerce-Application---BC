@@ -3,6 +3,7 @@ import AppError from "../../utils/services/AppError.js";
 import catchAsyncError from "../../utils/middleware/catchAsyncError.js";
 import { brandModel } from "../../../databases/models/brand.model.js";
 import deleteOne from "../../utils/handlers/refactor.handler.js";
+import ApiFeatures from "../../utils/APIFeatures.js";
 
 const createBrand = catchAsyncError(async (req, res, next) => {
   let { name } = req.body;
@@ -12,7 +13,8 @@ const createBrand = catchAsyncError(async (req, res, next) => {
 });
 
 const getAllBrand = catchAsyncError(async (req, res, next) => {
-  let results = await brandModel.find({});
+  let apiFeature = new ApiFeatures(brandModel.find(), req.query).pagination().sort().fields()
+  let results = await apiFeature.mongooseQuery;
   res.json({ message: "the all brands are: ", results });
 });
 

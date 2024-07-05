@@ -1,12 +1,13 @@
 export default class ApiFeatures {
+
   constructor(mongooseQuery, queryString) {
     this.mongooseQuery = mongooseQuery;
     this.queryString = queryString;
   }
 
   pagination() {
-    let page = req.queryString.page * 1 || 1;
-    if (req.queryString.page <= 0) page = 1;
+    let page = this.queryString.page * 1 || 1;
+    if (this.queryString.page <= 0) page = 1;
     let skip = (page - 1) * 4;
     this.page = page;
     this.mongooseQuery.skip(skip).limit(4);
@@ -14,10 +15,12 @@ export default class ApiFeatures {
   }
 
   filter() {
-    let filterObj = { ...req.queryString };
-    let executedQuery = ["page", "sort", "fields", "keywords"];
-    executedQuery.forEach((q) => {
-      delete filterObj[q];
+    let filterObj = { ...this.queryString }; // pourquoi spread operator, on met this.queryString
+    let executedQuery = ["page", "sort", "fields", "keywords"]; 
+    // console.log(filterObj,'..........')                 /*fil filterObj mouch nest7a99ou lel*/
+    executedQuery.forEach((q) => {          /* lel page w sort, 3lech nefs5ou fihom mel query*/                   
+      delete filterObj[q];     /* cet delete mnin jet */
+      // console.log(filterObj)          
     });
     filterObj = JSON.stringify(filterObj);
     filterObj = filterObj.replace(/\bgt|gte|lt|lte\b/g, (match) => `$${match}`);
@@ -27,8 +30,8 @@ export default class ApiFeatures {
   }
 
   sort() {
-    if (req.queryString.sort) {
-      let sortBy = req.queryString.sort.split(",").join(" ");
+    if (this.queryString.sort) {
+      let sortBy = this.queryString.sort.split(",").join(" ");  /* split and join */
       // ["price", "-sold"]
       this.mongooseQuery.sort(sortBy);
     }
@@ -36,11 +39,11 @@ export default class ApiFeatures {
   }
 
   search() {
-    if (req.query.keyword) {
+    if (this.queryString.keyword) {
       this.mongooseQuery.find({
         $or: [
-          { title: { $regex: req.queryString.keyword, $options: "i" } },
-          { description: { $regex: req.queryString.keyword, $options: "i" } },
+          { title: { $regex: this.queryString.keyword, $options: "i" } },
+          { description: { $regex: this.queryString.keyword, $options: "i" } },
         ],
       });
     }
@@ -48,8 +51,8 @@ export default class ApiFeatures {
   }
 
   fields() {
-    if (req.query.fields) {
-      let fields = req.queryString.fields.split(",").join(" ");
+    if (this.queryString.fields) {
+      let fields = this.queryString.fields.split(",").join(" ");
       this.mongooseQuery.select(fields);
     }
     return this;

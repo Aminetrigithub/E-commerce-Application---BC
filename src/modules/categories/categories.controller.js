@@ -3,8 +3,7 @@ import slugify from "slugify";
 import AppError from "../../utils/services/AppError.js";
 import catchAsyncError from "../../utils/middleware/catchAsyncError.js";
 import deleteOne from "../../utils/handlers/refactor.handler.js";
-
-
+import ApiFeatures from "../../utils/APIFeatures.js";
 
 const createCategory = catchAsyncError(async (req, res, next) => {
   let { name } = req.body;
@@ -14,7 +13,12 @@ const createCategory = catchAsyncError(async (req, res, next) => {
 });
 
 const getAllCategory = catchAsyncError(async (req, res, next) => {
-  let results = await categoryModel.find({});
+  let apiFeature = new ApiFeatures(categoryModel.find(), req.query)
+    .pagination()
+    .sort()
+    .fields();
+  let results =
+    await apiFeature.mongooseQuery;
   res.json({ message: "the all categories are: ", results });
 });
 
