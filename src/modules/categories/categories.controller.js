@@ -6,8 +6,10 @@ import deleteOne from "../../utils/handlers/refactor.handler.js";
 import ApiFeatures from "../../utils/APIFeatures.js";
 
 const createCategory = catchAsyncError(async (req, res, next) => {
-  let { name } = req.body;
-  let results = new categoryModel({ name, slug: slugify(name) });
+
+  req.body.slug = slugify(req.body.name);
+  req.body.image = req.file.filename
+  let results = new categoryModel(req.body);
   let added = await results.save();
   res.status(201).json({ message: "Category created", added });
 });
