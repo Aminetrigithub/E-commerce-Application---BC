@@ -18,7 +18,12 @@ const categorySchema = mongoose.Schema(
     image: String,
   },
   {timestamps: true,}
+
 );
+
+categorySchema.post("init",(doc) => { console.log(doc)
+  doc.name = process.env.BASE_URL+"category/" +doc.image
+ })
 
 export const categoryModel = mongoose.model("category", categorySchema);
 

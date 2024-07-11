@@ -10,11 +10,11 @@ import subCategoryRouter from "./src/modules/subCategories/subCategories.routes.
 import brandRouter from "./src/modules/brands/brands.routes.js";
 import productRouter from "./src/modules/products/product.routes.js";
 
-
 dotenv.config();
 const app = express();
 const port = 3000;
 
+app.use(express.static("uploads"))
 app.use(express.json());
 app.use(morgan("dev"));
 
@@ -26,10 +26,8 @@ app.use("/api/v1/product", productRouter);
 
 
 
-app.all(
-  "*",
-  (req, res, next) =>
-    next(new AppError(`can't find this route : ${req.originalUrl}`, 404))
+app.all("*", (req, res, next) =>
+next(new AppError(`can't find this route : ${req.originalUrl}`, 404))
   //  res.json({ message: `can't find this route : ${req.originalUrl}` })}
 );
 

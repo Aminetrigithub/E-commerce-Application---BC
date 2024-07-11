@@ -6,8 +6,10 @@ import deleteOne from "../../utils/handlers/refactor.handler.js";
 import ApiFeatures from "../../utils/APIFeatures.js";
 
 const createBrand = catchAsyncError(async (req, res, next) => {
-  let { name } = req.body;
-  let results = new brandModel({ name, slug: slugify(name) });
+
+  req.body.slug = slugify(req.body.name)
+  req.body.logo = req.file.fileName;
+  let results = new brandModel(req.body);
   let added = await results.save();
   res.status(201).json({ message: "Brand created", added });
 });
@@ -28,11 +30,10 @@ const getBrandById = catchAsyncError(async (req, res, next) => {
 
 const updateBrand = catchAsyncError(async (req, res, next) => {
   let { id } = req.params;
-  let { name } = req.body;
+  req.body.slug = slugify(req.body.name);
+  if(req.file) req.body.logo = req.file.fileName;
   let results = await brandModel.findByIdAndUpdate(
-    id,
-    { name, slug: slugify(name) },
-    { new: true }
+    id, req.body, { new: true }
   );
   !results && next(new AppError("Brand not found to update", 404));
   results && res.json({ message: "this brand is updated: ", results });

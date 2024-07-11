@@ -6,7 +6,6 @@ import deleteOne from "../../utils/handlers/refactor.handler.js";
 import ApiFeatures from "../../utils/APIFeatures.js";
 
 const createCategory = catchAsyncError(async (req, res, next) => {
-
   req.body.slug = slugify(req.body.name);
   req.body.image = req.file.filename
   let results = new categoryModel(req.body);
