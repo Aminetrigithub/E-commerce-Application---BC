@@ -7,6 +7,9 @@ import ApiFeatures from "../../utils/APIFeatures.js";
 
 const createProduct = catchAsyncError(async (req, res, next) => {
   req.body.slug = slugify(req.body.title);
+  req.body.imgCover = req.files.imgCover[0].filename
+  req.body.images = req.files.images.map(ele => ele.filename)
+  console.log(req.files,'req.files');
   let results = new productModel(req.body);
   let added = await results.save();
   res.status(201).json({ message: "Product created", added });

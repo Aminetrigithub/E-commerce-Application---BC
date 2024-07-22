@@ -51,6 +51,7 @@ const productSchema = mongoose.Schema(
       default: 0,
       min: 0,
     },
+
     imgCover: String,
     
     images: [String],
@@ -75,6 +76,12 @@ const productSchema = mongoose.Schema(
     timestamps: true,
   }
 );
+
+productSchema.post("init", (doc) => {
+  console.log(doc)
+  doc.imgCover = process.env.BASE_URL + "product/" + doc.imgCover;
+  doc.images =  doc.images.map(path =>  process.env.BASE_URL + "product/" + path )
+});
 
 const productModel = mongoose.model("product", productSchema);
 

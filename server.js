@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import { dbConnection } from "./databases/dbConnection.js";
+dotenv.config();
 import categoryRouter from "./src/modules/categories/categories.routes.js";
 import morgan from "morgan";
 import AppError from "./src/utils/services/AppError.js";
@@ -10,13 +11,15 @@ import subCategoryRouter from "./src/modules/subCategories/subCategories.routes.
 import brandRouter from "./src/modules/brands/brands.routes.js";
 import productRouter from "./src/modules/products/product.routes.js";
 
-dotenv.config();
 const app = express();
 const port = 3000;
 
-app.use(express.static("uploads"))
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
+app.use(express.static("uploads"))
+
 
 app.use("/api/v1/category", categoryRouter);
 
